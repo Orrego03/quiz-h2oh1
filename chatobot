@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Qué sabor de H2Oh! eres?</title>
+  <style>
+    /* ===== Estilos generales ===== */
+    html, body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #e0f7e9;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    #chatbot {
+      width: 360px;
+      max-width: 90%;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+    #chatbot h1 {
+      color: #2a7c4f;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    .question {
+      margin: 1.5rem 0;
+    }
+    .question p {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    button {
+      margin: 0.4rem;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: #00c8c8;
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:hover {
+      background: #00afa4;
+      transform: translateY(-2px);
+    }
+    #loader {
+      margin-top: 1.5rem;
+      font-style: italic;
+      color: #555;
+      min-height: 1.4em;
+    }
+    #result {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #1c3b2c;
+      min-height: 2em;
+    }
+    #resetBtn {
+      margin-top: 2rem;
+      background: #f06292;
+      display: none;
+      padding: 0.6rem 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="chatbot">
+    <h1>🍹 ¿Qué sabor de H2Oh! eres?</h1>
+
+    <div class="question" id="q1">
+      <p>1) ¿Qué notas más?</p>
+      <button onclick="next('cítrico')">Cítrico</button>
+      <button onclick="next('dulce')">Dulce</button>
+    </div>
+    <div class="question" id="q2" style="display:none;">
+      <p>2) ¿Prefieres algo clásico o atrevido?</p>
+      <button onclick="next2('clásico')">Clásico</button>
+      <button onclick="next2('atrevido')">Atrevido</button>
+    </div>
+    <div class="question" id="q3" style="display:none;">
+      <p>3) ¿En qué momento lo tomarías?</p>
+      <button onclick="next3('día')">Día soleado</button>
+      <button onclick="next3('noche')">Noche tranquila</button>
+    </div>
+    <div class="question" id="q4" style="display:none;">
+      <p>4) ¿Cómo te gustan las burbujas?</p>
+      <button onclick="next4('suaves')">Suaves</button>
+      <button onclick="next4('intensas')">Intensas</button>
+    </div>
+    <div class="question" id="q5" style="display:none;">
+      <p>5) Elige un sabor extra:</p>
+      <button onclick="next5('menta')">Menta fresca</button>
+      <button onclick="next5('tropical')">Tropical mix</button>
+    </div>
+
+    <div id="loader"></div>
+    <div id="result"></div>
+
+    <button id="resetBtn" onclick="resetAll()">↻ Reiniciar</button>
+  </div>
+
+  <script>
+    let answers = {};
+
+    function next(val) {
+      answers.q1 = val;
+      showQuestion('q2');
+    }
+    function next2(val) {
+      answers.q2 = val;
+      showQuestion('q3');
+    }
+    function next3(val) {
+      answers.q3 = val;
+      showQuestion('q4');
+    }
+    function next4(val) {
+      answers.q4 = val;
+      showQuestion('q5');
+    }
+    function next5(val) {
+      answers.q5 = val;
+      hideAllQuestions();
+      showLoader();
+      setTimeout(() => { hideLoader(); showResult(); }, 3000);
+    }
+
+    function showQuestion(id) {
+      document.querySelectorAll('.question').forEach(q => q.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+    function hideAllQuestions() {
+      document.querySelectorAll('.question').forEach(q => q.style.display = 'none');
+    }
+    function showLoader() {
+      document.getElementById('loader').innerText = '🤖 La IA está pensando...';
+    }
+    function hideLoader() {
+      document.getElementById('loader').innerText = '';
+    }
+    function showResult() {
+      const { q1, q2, q3, q4, q5 } = answers;
+      let flavor = '';
+      if (q1 === 'cítrico' && q3 === 'día') flavor = 'Limón 🍋';
+      else if (q2 === 'clásico' && q1 === 'dulce') flavor = 'Manzana 🍏';
+      else if (q2 === 'atrevido' && q4 === 'intensas') flavor = 'Frutos Rojos 🍓';
+      else if (q5 === 'menta') flavor = 'Menta fresca 🌿';
+      else if (q5 === 'tropical') flavor = 'Tropical mix 🍍';
+      else flavor = 'Mandarina 🍊';
+      document.getElementById('result').innerText = `¡Tu sabor ideal es H2Oh! ${flavor}`;
+      document.getElementById('resetBtn').style.display = 'block';
+    }
+    function resetAll() {
+      answers = {};
+      document.getElementById('result').innerText = '';
+      document.getElementById('loader').innerText = '';
+      document.getElementById('resetBtn').style.display = 'none';
+      showQuestion('q1');
+    }
+  </script>
+</body>
+</html>
